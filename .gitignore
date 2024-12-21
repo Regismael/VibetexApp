@@ -1,0 +1,94 @@
+# Compiled object files
+*.o
+*.obj
+*.lo
+*.la
+*.al
+*.libs
+*.dll
+*.so
+*.dylib
+*.exe
+*.out
+*.app
+*.iobj
+*.pdb
+*.idb
+*.ncb
+*.suo
+*.opt
+*.plg
+*.user
+*.ttf
+*.eot
+*.woff
+*.woff2
+*.appx
+*.appxsym
+
+# Visual Studio temporary files
+*.tlog
+*.lastbuildstate
+*.userprefs
+*.suo
+*.unsuccessfulbuild
+*.filters
+
+# Visual Studio 2022 specific
+.vscode/
+
+# Build Directories
+bin/
+obj/
+
+# Rider project files
+.idea/
+*.sln.iml
+
+# Backup files
+*~
+
+# Package Files
+*.nupkg
+*.snupkg
+
+# Logs
+*.log
+
+# StyleCop
+*.stylecop
+
+# Coverage Reports
+coverage/
+*.coverage
+*.coveragexml
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Visual Studio Code
+.vscode/
+
+# User-specific files
+*.user
+*.vs/
+
+# Temporary files
+~$*
+*.tmp
+*.temp
+
+# Windows image file caches
+Thumbs.db
+
+# Mono auto-generated files
+mono_crash.*
+
+# macOS files
+.DS_Store
+
+# JetBrains Rider and IntelliJ IDEA project settings
+.idea/
+*.iml
+out/
