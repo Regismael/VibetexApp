@@ -11,11 +11,11 @@ namespace VibetexApp.Domain.Interfaces.Services
     public interface IUsuarioService
     {
         (CriarUsuarioResponseDto, Guid) CriarUsuario(Usuario usuario, int tipoPerfil);
-        void InicioExpediente(Guid usuarioId);
-        void Pausa(Guid usuarioId);
-        void VoltaDaPausa(Guid usuarioId);
-        void FimDoExpediente(Guid usuarioId);
-        List<Usuario> ConsultarUsuarios();
-        Usuario? ConsultarPorId(Guid id);
+        Guid InicioExpediente(Guid usuarioId);
+        void Pausa(Guid usuarioId, Guid pontoId);
+        void VoltaDaPausa(Guid usuarioId, Guid pontoId);
+        void FimDoExpediente(Guid usuarioId, Guid pontoId);
+        List<ConsultarUsuarioResponseDto> ConsultarUsuarios();
+        ConsultarUsuarioResponseDto? ConsultarPorId(Guid id);
     }
 }

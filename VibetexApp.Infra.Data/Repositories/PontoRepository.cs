@@ -31,6 +31,16 @@ namespace VibetexApp.Infra.Data.Repositories
             }
         }
 
+        public Ponto? GetById(Guid pontoId)
+        {
+            using (var dataContext = new DataContext())
+            {
+                return dataContext.Set<Ponto>()
+                    .Where(p => p.Id == pontoId)
+                    .FirstOrDefault();
+            }
+        }
+
         public ICollection<Ponto> GetAll()
         {
             using (var dataContext = new DataContext())
@@ -66,5 +76,13 @@ namespace VibetexApp.Infra.Data.Repositories
             }
         }
 
+        public void Update(Ponto ponto)
+        {
+            using (var dataContext = new DataContext())
+            {
+                dataContext.Update(ponto);
+                dataContext.SaveChanges();
+            }
+        }
     }
 }

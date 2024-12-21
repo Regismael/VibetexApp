@@ -31,33 +31,30 @@ namespace VibetexApp.Infra.Data.Mappings
 
             builder.Property(p => p.HorasTrabalhadas)
                 .HasColumnName("HORAS_TRABALHADAS")
-                .HasColumnType("TIME") 
-                .IsRequired();
+                .HasColumnType("TIME");
 
             builder.Property(p => p.HorasExtras)
                 .HasColumnName("HORAS_EXTRAS")
-                .HasColumnType("TIME")
-                .IsRequired();
+                .HasColumnType("TIME");
 
             builder.Property(p => p.HorasDevidas)
                 .HasColumnName("HORAS_DEVIDAS")
-                .HasColumnType("TIME")
-                .IsRequired();
+                .HasColumnType("TIME");
+
 
             builder.Property(p => p.Observacoes)
                 .HasColumnName("OBSERVACOES")
-                .HasMaxLength(500)
-                .IsRequired();
+                .HasMaxLength(500);
 
             builder.Property(p => p.Latitude)
                 .HasColumnName("LATITUDE")
-                .HasMaxLength(50)
-                .IsRequired();
+                .HasMaxLength(50);
+
 
             builder.Property(p => p.Longitude)
                 .HasColumnName("LONGITUDE")
                 .HasMaxLength(50)
-                .IsRequired();
+               ;
 
             builder.Property(p => p.UsuarioId)
                 .HasColumnName("USUARIO_ID")

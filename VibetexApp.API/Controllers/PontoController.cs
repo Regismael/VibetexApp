@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using VibetexApp.Domain.Dtos;
 using VibetexApp.Domain.Entities;
 using VibetexApp.Domain.Entities.VibetexApp.Domain.Entities;
 using VibetexApp.Domain.Interfaces.Services;
@@ -22,7 +23,7 @@ namespace VibetexApp.API.Controllers
 
         // Consultar todos os pontos
         [HttpGet]
-        [ProducesResponseType(typeof(List<Ponto>), 200)]
+        [ProducesResponseType(typeof(List<ConsultarPontoResponseDto>), 200)]
         public IActionResult ConsultarPontos()
         {
             try
@@ -36,8 +37,8 @@ namespace VibetexApp.API.Controllers
             }
         }
 
-        [HttpGet("por-data")]
-        [ProducesResponseType(typeof(List<Ponto>), 200)]
+        [HttpGet("consulta-por-data")]
+        [ProducesResponseType(typeof(List<ConsultarPontoResponseDto>), 200)]
         public IActionResult ConsultarPontosPorData([FromQuery] DateTime dataMin, [FromQuery] DateTime dataMax, [FromQuery] Guid pontoId)
         {
             try

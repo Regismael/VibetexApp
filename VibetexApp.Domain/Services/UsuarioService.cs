@@ -66,29 +66,26 @@ namespace VibetexApp.Domain.Services
         }
 
 
-        public void InicioExpediente(Guid usuarioId)
+        public Guid InicioExpediente(Guid usuarioId)
         {
             var usuario = _usuarioRepository.GetById(usuarioId);
             if (usuario != null)
             {
-                var pontoAtivo = _pontoRepository.GetAll()
-                    .FirstOrDefault(p => p.UsuarioId == usuarioId && p.FimExpediente == null);
+                var ponto = new Ponto
+                {
+                    Id = Guid.NewGuid(),
+                    UsuarioId = usuario.Id,
+                    InicioExpediente = DateTime.Now,
+                    HorasTrabalhadas = TimeSpan.FromHours(8),
+                    HorasExtras = TimeSpan.FromHours(2),
+                    HorasDevidas = TimeSpan.FromHours(1),
+                    Observacoes = "Nenhuma observação",
+                    Latitude = "-22.861564",
+                    Longitude = "-43.23105"
+                };
+                _pontoRepository.Add(ponto);
 
-                if (pontoAtivo == null)
-                {
-                    var ponto = new Ponto
-                    {
-                        Id = Guid.NewGuid(),
-                        UsuarioId = usuario.Id,
-                        // Deixamos InicioExpediente como null, até que o expediente realmente comece
-                        Usuario = usuario
-                    };
-                    _pontoRepository.Add(ponto);
-                }
-                else
-                {
-                    throw new Exception("Já existe um ponto de expediente em andamento.");
-                }
+                return ponto.Id;
             }
             else
             {
@@ -96,25 +93,17 @@ namespace VibetexApp.Domain.Services
             }
         }
 
-        public void FimDoExpediente(Guid usuarioId)
+        public void FimDoExpediente(Guid usuarioId, Guid pontoId)
         {
             var usuario = _usuarioRepository.GetById(usuarioId);
             if (usuario != null)
             {
-                var ponto = _pontoRepository.GetAll()
-                    .Where(p => p.UsuarioId == usuarioId && p.FimExpediente == null)
-                    .OrderByDescending(p => p.InicioExpediente)
-                    .FirstOrDefault();
+                var ponto = _pontoRepository.GetById(pontoId);
 
-                if (ponto != null)
-                {
-                    ponto.FimExpediente = DateTime.Now;  // Aqui, a data será atribuída
-                    _pontoRepository.Add(ponto);
-                }
-                else
-                {
-                    throw new Exception("Ponto de expediente não encontrado.");
-                }
+                ponto.UsuarioId = usuario.Id;
+                ponto.FimExpediente = DateTime.Now;
+               
+                _pontoRepository.Update(ponto);
             }
             else
             {
@@ -122,29 +111,17 @@ namespace VibetexApp.Domain.Services
             }
         }
 
-        public void Pausa(Guid usuarioId)
+        public void Pausa(Guid usuarioId, Guid pontoId)
         {
             var usuario = _usuarioRepository.GetById(usuarioId);
             if (usuario != null)
             {
-                var pontoEmPausa = _pontoRepository.GetAll()
-                    .FirstOrDefault(p => p.UsuarioId == usuarioId && p.RetornoPausa == null);
+                var ponto = _pontoRepository.GetById(pontoId);
 
-                if (pontoEmPausa == null)
-                {
-                    var ponto = new Ponto
-                    {
-                        Id = Guid.NewGuid(),
-                        UsuarioId = usuario.Id,
-                        InicioPausa = DateTime.Now,  // A data será atribuída aqui
-                        Usuario = usuario
-                    };
-                    _pontoRepository.Add(ponto);
-                }
-                else
-                {
-                    throw new Exception("O usuário já está em pausa.");
-                }
+                ponto.UsuarioId = usuario.Id;
+                ponto.InicioPausa = DateTime.Now;
+
+                _pontoRepository.Update(ponto);
             }
             else
             {
@@ -152,23 +129,17 @@ namespace VibetexApp.Domain.Services
             }
         }
 
-        public void VoltaDaPausa(Guid usuarioId)
+        public void VoltaDaPausa(Guid usuarioId, Guid pontoId)
         {
             var usuario = _usuarioRepository.GetById(usuarioId);
             if (usuario != null)
             {
-                var ponto = _pontoRepository.GetAll()
-                    .FirstOrDefault(p => p.UsuarioId == usuarioId && p.RetornoPausa == null);
+                var ponto = _pontoRepository.GetById(pontoId);
 
-                if (ponto != null)
-                {
-                    ponto.RetornoPausa = DateTime.Now;  // A data será atribuída aqui
-                    _pontoRepository.Add(ponto);
-                }
-                else
-                {
-                    throw new Exception("Ponto de pausa não encontrado.");
-                }
+                ponto.UsuarioId = usuario.Id;
+                ponto.RetornoPausa = DateTime.Now;
+
+                _pontoRepository.Update(ponto);
             }
             else
             {
@@ -177,15 +148,82 @@ namespace VibetexApp.Domain.Services
         }
 
 
-        public List<Usuario> ConsultarUsuarios()
+
+        public List<ConsultarUsuarioResponseDto> ConsultarUsuarios()
         {
-            return _usuarioRepository.GetAll().ToList();
+            // Busca todos os usuários no repositório
+            var usuarios = _usuarioRepository.GetAll().ToList();
+
+            // Transforma os usuários na lista de DTOs
+            var usuariosDto = usuarios.Select(u => new ConsultarUsuarioResponseDto
+            {
+                Id = u.Id,
+                Nome = u.Nome,
+                Email = u.Email,
+                TipoPerfil = u.TipoPerfil.ToString(),
+                Pontos = _pontoRepository.GetAll()
+                            .Where(p => p.UsuarioId == u.Id)
+                            .Select(p => new ConsultarPontoResponseDto
+                            {
+                                Id = p.Id,
+                                InicioExpediente = p.InicioExpediente,
+                                FimExpediente = p.FimExpediente,
+                                InicioPausa = p.InicioPausa,
+                                RetornoPausa = p.RetornoPausa,
+                                HorasTrabalhadas = p.HorasTrabalhadas,
+                                HorasExtras = p.HorasExtras,
+                                HorasDevidas = p.HorasDevidas,
+                                Observacoes = p.Observacoes,
+                                Latitude = p.Latitude,
+                                Longitude = p.Longitude
+                            })
+                            .ToList()
+            }).ToList();
+
+            return usuariosDto;
         }
 
-        public Usuario? ConsultarPorId(Guid id)
+
+        public ConsultarUsuarioResponseDto? ConsultarPorId(Guid id)
         {
-            return _usuarioRepository.GetById(id);
+            // Busca o usuário no repositório
+            var usuario = _usuarioRepository.GetById(id);
+
+            // Verifica se o usuário existe
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            // Mapeia o usuário para o DTO
+            var usuarioDto = new ConsultarUsuarioResponseDto
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                TipoPerfil = usuario.TipoPerfil.ToString(),
+                Pontos = _pontoRepository.GetAll()
+                            .Where(p => p.UsuarioId == usuario.Id)
+                            .Select(p => new ConsultarPontoResponseDto
+                            {
+                                Id = p.Id,
+                                InicioExpediente = p.InicioExpediente,
+                                FimExpediente = p.FimExpediente,
+                                InicioPausa = p.InicioPausa,
+                                RetornoPausa = p.RetornoPausa,
+                                HorasTrabalhadas = p.HorasTrabalhadas,
+                                HorasExtras = p.HorasExtras,
+                                HorasDevidas = p.HorasDevidas,
+                                Observacoes = p.Observacoes,
+                                Latitude = p.Latitude,
+                                Longitude = p.Longitude
+                            })
+                            .ToList()
+            };
+
+            return usuarioDto;
         }
 
+  
     }
 }

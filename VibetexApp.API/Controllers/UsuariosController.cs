@@ -98,8 +98,8 @@ namespace VibetexApp.API.Controllers
         {
             try
             {
-                _usuarioService.InicioExpediente(usuarioId);
-                return NoContent();
+                var Id = _usuarioService.InicioExpediente(usuarioId);
+                return Ok(new { Id });
             }
             catch (Exception e)
             {
@@ -111,12 +111,12 @@ namespace VibetexApp.API.Controllers
         [HttpPost("{usuarioId}/fim-expediente")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult FimDoExpediente(Guid usuarioId)
+        public IActionResult FimDoExpediente(Guid usuarioId, Guid pontoId)
         {
             try
             {
-                _usuarioService.FimDoExpediente(usuarioId);
-                return NoContent();
+                _usuarioService.FimDoExpediente(usuarioId, pontoId);
+                return Ok();
             }
             catch (Exception e)
             {
@@ -128,12 +128,12 @@ namespace VibetexApp.API.Controllers
         [HttpPost("{usuarioId}/pausa")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult Pausa(Guid usuarioId)
+        public IActionResult Pausa(Guid usuarioId, Guid pontoId)
         {
             try
             {
-                _usuarioService.Pausa(usuarioId);
-                return NoContent();
+                _usuarioService.Pausa(usuarioId, pontoId);
+                return Ok();
             }
             catch (Exception e)
             {
@@ -145,12 +145,12 @@ namespace VibetexApp.API.Controllers
         [HttpPost("{usuarioId}/volta-da-pausa")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult VoltaDaPausa(Guid usuarioId)
+        public IActionResult VoltaDaPausa(Guid usuarioId, Guid pontoId)
         {
             try
             {
-                _usuarioService.VoltaDaPausa(usuarioId);
-                return NoContent();
+                _usuarioService.VoltaDaPausa(usuarioId, pontoId);
+                return Ok();
             }
             catch (Exception e)
             {
