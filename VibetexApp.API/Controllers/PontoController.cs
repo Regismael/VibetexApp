@@ -39,11 +39,11 @@ namespace VibetexApp.API.Controllers
 
         [HttpGet("consulta-por-data")]
         [ProducesResponseType(typeof(List<ConsultarPontoResponseDto>), 200)]
-        public IActionResult ConsultarPontosPorData([FromQuery] DateTime dataMin, [FromQuery] DateTime dataMax, [FromQuery] Guid pontoId)
+        public IActionResult ConsultarPontosPorData([FromQuery] DateTime dataMin, [FromQuery] DateTime dataMax)
         {
             try
             {
-                var pontos = _pontoService.ConsultarPontosPorData(dataMin, dataMax, pontoId);
+                var pontos = _pontoService.ConsultarPontosPorData(dataMin, dataMax);
                 return Ok(pontos);
             }
             catch (Exception e)

@@ -11,7 +11,7 @@ namespace VibetexApp.Domain.Interfaces.Services
     public interface IPontoService
     {
         List<ConsultarPontoResponseDto> ConsultarPontos();
-        List<ConsultarPontoResponseDto> ConsultarPontosPorData(DateTime dataMin, DateTime dataMax, Guid pontoId);
+        List<ConsultarPontoResponseDto> ConsultarPontosPorData(DateTime dataMin, DateTime dataMax);
     }
 
 }

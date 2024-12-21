@@ -68,13 +68,13 @@ namespace VibetexApp.Domain.Services
         }
 
         // Método de consulta filtrando por intervalo de datas e pontoId
-        public List<ConsultarPontoResponseDto> ConsultarPontosPorData(DateTime dataMin, DateTime dataMax, Guid pontoId)
+        public List<ConsultarPontoResponseDto> ConsultarPontosPorData(DateTime dataMin, DateTime dataMax)
         {
             // Obtém todos os pontos
             var pontos = _pontoRepository.GetAll();
 
             // Filtra os pontos pelo intervalo de datas e pelo pontoId
-            var pontosFiltrados = pontos.Where(p => p.InicioExpediente >= dataMin && p.FimExpediente <= dataMax && p.Id == pontoId)
+            var pontosFiltrados = pontos.Where(p => p.InicioExpediente >= dataMin && p.FimExpediente <= dataMax)
                                         .ToList();
 
             // Mapeia os pontos filtrados para DTOs

@@ -50,31 +50,38 @@ namespace VibetexApp.Infra.Data.Repositories
                     .ToList();
             }
         }
-
         public List<Ponto> Get(DateTime dataMin, DateTime dataMax, Guid pontoId)
         {
             using (var dataContext = new DataContext())
             {
                 var query = dataContext.Set<Ponto>().AsQueryable();
 
+                // Filtra pela data mínima, se fornecida
                 if (dataMin != DateTime.MinValue)
                 {
                     query = query.Where(p => p.InicioExpediente >= dataMin);
                 }
 
+                // Filtra pela data máxima, se fornecida
                 if (dataMax != DateTime.MinValue)
                 {
                     query = query.Where(p => p.InicioExpediente <= dataMax);
                 }
 
+                // Filtra pelo ID do ponto, se fornecido
                 if (pontoId != Guid.Empty)
                 {
                     query = query.Where(p => p.Id == pontoId);
                 }
 
+                // Ordena os pontos pela data de início do expediente (crescente)
+                query = query.OrderBy(p => p.FimExpediente);
+
+                // Retorna a lista ordenada de pontos
                 return query.ToList();
             }
         }
+
 
         public void Update(Ponto ponto)
         {
